@@ -12,15 +12,19 @@ jobs:
             - run: |
                 quicktype \
                   --src-lang schema \
-                  schema.json \
+                  fhir.schema.json \
                   --lang cpp \
                   --just-types \
                   --no-boost \
                   --code-format with-struct \
-                  --top-level Person \
-                  --out Person.cpp
+                  --top-level Fhir \
+                  --out Fhir.cpp
                   
-                  
-                  
-            - run: echo "$(<Person.cpp )"
-
+            - run: echo "$(<Fhir.cpp )"
+            
+            - name: Release prebuilt
+              uses: ncipollo/release-action@v1
+              with:
+                artifacts: "Fhir.cpp"
+                allowUpdates: true
+                token: ${{ secrets.GITHUB_TOKEN }}
