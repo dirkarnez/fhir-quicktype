@@ -1,0 +1,26 @@
+name: Build and Release
+on: push
+    
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            
+            - run: npm install -g quicktype
+
+            - run: |
+                quicktype \
+                  --src-lang schema \
+                  schema.json \
+                  --lang cpp \
+                  --just-types \
+                  --no-boost \
+                  --code-format with-struct \
+                  --top-level Person \
+                  --out Person.cpp
+                  
+                  
+                  
+            - run: echo "$(<Person.cpp )"
+
