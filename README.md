@@ -6,3 +6,4 @@ fhir-quicktype
 - [ ] versioned build
   - [FHIR Specification](http://hl7.org/fhir/directory.html)
 - [ ] C++ struct using [dirkarnez/miroir-playground](https://github.com/dirkarnez/miroir-playground)
+- [ ] [barrettotte/Model-Generator: Generate code for basic models from JSON schema in Java, Groovy, Kotlin, TypeScript](https://github.com/barrettotte/Model-Generator)
