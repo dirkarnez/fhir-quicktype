@@ -5,30 +5,37 @@ on:
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
       
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+permissions:
+    contents: write
+    
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            
-            - run: npm install -g quicktype
+          - uses: actions/checkout@v3
+          
+          - run: npm install -g quicktype
 
-            - run: |
-                quicktype \
-                  --src-lang schema \
-                  --src fhir.schema.json \
-                  --lang cpp \
-                  --just-types \
-                  --no-boost \
-                  --code-format with-struct \
-                  --top-level Patient \
-                  --out Patient.cpp
-  
-            - run: echo "$(<Patient.cpp )"
-            
-            - name: Release prebuilt
-              uses: ncipollo/release-action@v1
-              with:
-                artifacts: "Patient.cpp"
-                allowUpdates: true
-                token: ${{ secrets.GITHUB_TOKEN }}
+          - run: |
+              quicktype \
+                --src-lang schema \
+                --src fhir.schema.json \
+                --lang cpp \
+                --just-types \
+                --no-boost \
+                --code-format with-struct \
+                --top-level Patient \
+                --out Patient.cpp
+
+          - run: echo "$(<Patient.cpp )"
+          
+          - name: Release prebuilt
+            uses: ncipollo/release-action@v1
+            with:
+              artifacts: "Patient.cpp"
+              allowUpdates: true
+              token: ${{ secrets.GITHUB_TOKEN }}
