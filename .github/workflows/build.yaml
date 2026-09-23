@@ -1,6 +1,10 @@
 name: Build and Release
-on: push
-    
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -12,19 +16,19 @@ jobs:
             - run: |
                 quicktype \
                   --src-lang schema \
-                  fhir.schema.json \
+                  --src fhir.schema.json \
                   --lang cpp \
                   --just-types \
                   --no-boost \
                   --code-format with-struct \
-                  --top-level Fhir \
-                  --out Fhir.cpp
-                  
-            - run: echo "$(<Fhir.cpp )"
+                  --top-level Patient \
+                  --out Patient.cpp
+  
+            - run: echo "$(<Patient.cpp )"
             
             - name: Release prebuilt
               uses: ncipollo/release-action@v1
               with:
-                artifacts: "Fhir.cpp"
+                artifacts: "Patient.cpp"
                 allowUpdates: true
                 token: ${{ secrets.GITHUB_TOKEN }}
